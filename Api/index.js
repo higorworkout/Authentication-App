@@ -1,14 +1,21 @@
-// Express config
 import express from 'express';
-const app = express();
-
-// dot env config
+import userRoutes from './Routes/user.route.js';
+import authRoutes from './Routes/auth.route.js';
 import dotenv from 'dotenv'
-dotenv.config();
-
-//Conection with mongo
 import mongoose from 'mongoose';
 
+const app = express();
+//json for body-parser
+import bodyParser from 'body-parser'
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+
+// dot env config
+dotenv.config();
+
+
+//Conection with mongo
 const connection = mongoose.connect(process.env.MONGO, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("Connected to MongoDB");
 }).catch((e) => {
@@ -16,8 +23,8 @@ const connection = mongoose.connect(process.env.MONGO, {useNewUrlParser: true, u
 })
 
 //Routes config
-import userRoutes from './Routes/user.route.js';
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 
 
 app.listen(3000, () => {
